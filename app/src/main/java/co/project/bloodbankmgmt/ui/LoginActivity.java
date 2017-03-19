@@ -3,6 +3,9 @@ package co.project.bloodbankmgmt.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,7 +26,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
+import java.util.Map;
+
 import co.project.bloodbankmgmt.R;
+import co.project.bloodbankmgmt.models.User;
 
 /**
  * A login screen that offers login via username/password.
@@ -31,31 +39,25 @@ public class LoginActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "kunalb", "shraddhap"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
-
     // UI references.
     private EditText edtUsername;
     private EditText edtPassword;
     private View mProgressView;
     private View mLoginFormView;
 
+    private Context mAppContext;
+    private Context mActivityContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mAppContext = getApplicationContext();
+        mActivityContext = this;
+
         // Set up the login form.
         edtUsername = (EditText) findViewById(R.id.edt_username);
-
         edtPassword = (EditText) findViewById(R.id.edt_password);
         edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -69,7 +71,9 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         Button mSignInButton = (Button) findViewById(R.id.btn_sign_in);
-        Button mRegisterButton = (Button) findViewById(R.id.btn_register);
+        TextView mRegisterButton = (TextView) findViewById(R.id.txt_register);
+        mRegisterButton.setPaintFlags(mRegisterButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
         mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,7 +84,8 @@ public class LoginActivity extends AppCompatActivity {
         mRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: launch registration activity
+                Intent intent = new Intent(mActivityContext, RegisterActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -88,21 +93,6 @@ public class LoginActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        mDatabase.child("variable").child("users").equalTo("kunalb", "username").equalTo("kunalb", "password").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Object object = dataSnapshot.getValue();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     /**
@@ -111,17 +101,13 @@ public class LoginActivity extends AppCompatActivity {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
         // Reset errors.
         edtUsername.setError(null);
         edtPassword.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = edtUsername.getText().toString();
-        String password = edtPassword.getText().toString();
+        String username = edtUsername.getText().toString();
+        final String password = edtPassword.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -134,11 +120,11 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(username)) {
             edtUsername.setError(getString(R.string.error_field_required));
             focusView = edtUsername;
             cancel = true;
-        } else if (!isUsernameValid(email)) {
+        } else if (!isUsernameValid(username)) {
             edtUsername.setError(getString(R.string.error_invalid_username));
             focusView = edtUsername;
             cancel = true;
@@ -152,13 +138,46 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+
+            DatabaseReference firebaseUserDB = mDatabase.child("variable").child("users");
+            firebaseUserDB.orderByChild("username").equalTo(username);
+            firebaseUserDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User userSelected = null;
+                    if (dataSnapshot.getChildrenCount() > 0) {
+                        Iterable<DataSnapshot> childrens = dataSnapshot.getChildren();
+                        for (DataSnapshot children : childrens) {
+                            userSelected = children.getValue(User.class);
+                            if (userSelected.getPassword().equals(password)) {
+                                break;
+                            }
+                            else {
+                                userSelected = null;
+                            }
+                        }
+                    }
+
+                    if (userSelected != null) {
+                        Toast.makeText(mAppContext, "User Exist", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(mAppContext, "User doesn't exist", Toast.LENGTH_SHORT).show();
+                    }
+                    showProgress(false);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(mAppContext, "Database error occured", Toast.LENGTH_SHORT).show();
+                    showProgress(false);
+                }
+            });
         }
     }
 
     private boolean isUsernameValid(String username) {
-        return TextUtils.isEmpty(username);
+        return !TextUtils.isEmpty(username);
     }
 
     private boolean isPasswordValid(String password) {
@@ -198,63 +217,6 @@ public class LoginActivity extends AppCompatActivity {
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                edtPassword.setError(getString(R.string.error_incorrect_password));
-                edtPassword.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
         }
     }
 }
