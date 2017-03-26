@@ -10,8 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import co.project.bloodbankmgmt.R;
 import co.project.bloodbankmgmt.adapter.BloodBankListAdapter;
+import co.project.bloodbankmgmt.models.BloodGroups;
 import co.project.bloodbankmgmt.ui.dummy.DummyContent;
 import co.project.bloodbankmgmt.ui.dummy.DummyContent.DummyItem;
 
@@ -69,7 +72,7 @@ public class BloodBankListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new BloodBankListAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new BloodBankListAdapter(new ArrayList<BloodGroups>(), mListener));
         }
         return view;
     }

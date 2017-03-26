@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import co.project.bloodbankmgmt.R;
+import co.project.bloodbankmgmt.models.User;
 
 /**
  * Adapter for service list
@@ -20,7 +21,7 @@ import co.project.bloodbankmgmt.R;
 public class SearchDonorAdapter extends RecyclerView.Adapter<SearchDonorAdapter.ServiceHolder> {
 
     private Context mContext;
-    private List<String> mServiceList;
+    private List<User> mUserList;
 
     public SearchDonorAdapter(Context context) {
         mContext = context;
@@ -34,32 +35,29 @@ public class SearchDonorAdapter extends RecyclerView.Adapter<SearchDonorAdapter.
 
     @Override
     public void onBindViewHolder(SearchDonorAdapter.ServiceHolder holder, int position) {
-        holder.txtName.setText("Name" + position);
-       // holder.imgService.setImageResource(mServiceList.get(position).getImgId());
+        holder.txtName.setText(mUserList.get(position).getFullname());
+        holder.txtAddress.setText(mUserList.get(position).getAddress());
+        holder.txtCall.setText(mUserList.get(position).getMobileNumber());
+
     }
 
-   /* @Override
+    @Override
     public int getItemCount() {
-        return mServiceList == null ? 0 : mServiceList.size();
-    }*/
-
-   @Override
-    public int getItemCount() {
-        return  5;
+        return mUserList == null ? 0 : mUserList.size();
     }
+
 
     /**
      * Notifies the list of adapter
      */
-    /*public void setData(List<ServiceEntity> serviceList) {
-        this.mServiceList = serviceList;
+    public void setData(List<User> serviceList) {
+        this.mUserList = serviceList;
         notifyDataSetChanged();
-    }*/
+    }
 
     class ServiceHolder extends RecyclerView.ViewHolder {
 
         TextView txtName, txtAddress, txtCall;
-        ImageView imgService;
 
         ServiceHolder(View itemView) {
             super(itemView);

@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -6,16 +6,50 @@
               tools:context="co.project.bloodbankmgmt.ui.SearchDonorFragment">
 
 
-    <android.support.v7.widget.AppCompatButton android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/selector_serach_edittext"
-            android:hint="Click here to Search donor"
-            android:textColor="#333333"/>
+    <android.support.v7.widget.AppCompatButton android:id="@+id/btn_select_blood_group"
+                                               android:layout_width="match_parent"
+                                               android:layout_height="50dp"
+                                               android:layout_margin="5dp"
+                                               android:background="@drawable/selector_serach_edittext"
+                                               android:hint="Click here to Search donor"
+                                               android:textColor="#333333"/>
+
+
+    <TextView android:id="@+id/txt_no_capex_data"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/btn_select_blood_group"
+              android:layout_centerHorizontal="true"
+              android:layout_marginTop="15dp"
+              android:padding="5dp"
+              android:textStyle="italic"
+              android:text="Donor not available"
+              android:textColor="#999999"
+              android:textSize="20sp"
+    />
 
     <android.support.v7.widget.RecyclerView android:id="@+id/rv_donor_list"
-                                            android:padding="5dp"
+                                            android:layout_below="@+id/btn_select_blood_group"
                                             android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"/>
+                                            android:layout_height="wrap_content"
+                                            android:background="#ffffff"
+                                            android:padding="5dp"/>
 
-</LinearLayout>
+    <RelativeLayout android:id="@+id/rlt_progress"
+                    android:layout_width="match_parent"
+                    android:elevation="4dp"
+                    android:layout_height="match_parent"
+                    android:background="#ffffff"
+                    android:visibility="gone">
+
+
+        <ProgressBar android:id="@+id/progress_bar"
+                     style="?android:attr/progressBarStyle"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
