@@ -25,9 +25,9 @@ public class ActivityUtils {
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         SimpleDialogAdapter simpleDialogAdapter = new SimpleDialogAdapter(new OnDialogClickListener() {
             @Override
-            public void onClick(long selection) {
+            public void onClick(long selectionId, String selection) {
                 dialog.dismiss();
-                intf.onClick(selection);
+                intf.onClick(selectionId, selection);
             }
         });
         recyclerView.setAdapter(simpleDialogAdapter);
@@ -44,6 +44,6 @@ public class ActivityUtils {
 
     public interface OnDialogClickListener {
 
-        void onClick(long selection);
+        void onClick(long selectionId, String bloodGroup);
     }
 }

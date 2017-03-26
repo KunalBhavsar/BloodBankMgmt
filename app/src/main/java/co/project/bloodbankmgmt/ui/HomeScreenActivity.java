@@ -1,5 +1,6 @@
 package co.project.bloodbankmgmt.ui;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -37,6 +38,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BloodBankLi
     protected Toolbar toolbar;
 
     private ViewPagerAdapter viewPagerAdapter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,12 +51,12 @@ public class HomeScreenActivity extends AppCompatActivity implements BloodBankLi
     }
 
     private void getBloodGroupData() {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference();
-        databaseReference.child("master").child("bloodGroups");
+        progressDialog.show();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                progressDialog.cancel();
                 List<BloodGroups> bloodGroupList = new ArrayList<>();
                 if(dataSnapshot.getChildrenCount() > 0) {
                     Iterable<DataSnapshot> childrenIterator = dataSnapshot.child("master").child("bloodGroups").getChildren();
@@ -70,6 +72,7 @@ public class HomeScreenActivity extends AppCompatActivity implements BloodBankLi
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                progressDialog.show();
                 Log.e("Home screen", databaseError.getMessage());
             }
         });
@@ -78,6 +81,10 @@ public class HomeScreenActivity extends AppCompatActivity implements BloodBankLi
     private void initViews() {
         tabLayout  = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.container);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading");
     }
 
     private void setupTabs() {

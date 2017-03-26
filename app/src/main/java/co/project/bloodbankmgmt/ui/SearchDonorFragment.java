@@ -6,13 +6,27 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import co.project.bloodbankmgmt.R;
 import co.project.bloodbankmgmt.adapter.SearchDonorAdapter;
 import co.project.bloodbankmgmt.app.BloodBankApplication;
+import co.project.bloodbankmgmt.models.BloodGroups;
+import co.project.bloodbankmgmt.models.User;
 import co.project.bloodbankmgmt.utils.ActivityUtils;
 
 /**
@@ -32,6 +46,7 @@ public class SearchDonorFragment extends Fragment implements ActivityUtils.OnDia
     private AppCompatButton btnSelectBloodGroup;
 
     private RecyclerView rvDonorList;
+    private RelativeLayout rltProgress;
     private SearchDonorAdapter searchDonorAdapter;
 
     public SearchDonorFragment() {
@@ -75,6 +90,7 @@ public class SearchDonorFragment extends Fragment implements ActivityUtils.OnDia
 
         searchDonorAdapter = new SearchDonorAdapter(getContext());
         btnSelectBloodGroup = (AppCompatButton) view.findViewById(R.id.btn_select_blood_group);
+        rltProgress = (RelativeLayout) view.findViewById(R.id.rlt_progress);
         rvDonorList = (RecyclerView) view.findViewById(R.id.rv_donor_list);
         rvDonorList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         rvDonorList.setAdapter(searchDonorAdapter);
@@ -89,7 +105,38 @@ public class SearchDonorFragment extends Fragment implements ActivityUtils.OnDia
     }
 
     @Override
-    public void onClick(long selection) {
+    public void onClick(long selectionId, String bloodGroup) {
+        btnSelectBloodGroup.setText(bloodGroup);
+        rltProgress.setVisibility(View.VISIBLE);
+
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        Query query = database.child("variable").child("users").orderByChild("bloodGroup").equalTo(selectionId);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                rltProgress.setVisibility(View.GONE);
+                List<User> userList = new ArrayList<>();
+                if(dataSnapshot != null && dataSnapshot.getChildrenCount() > 0) {
+                    Iterable<DataSnapshot> childrenIterator = dataSnapshot.getChildren();
+
+                    for (DataSnapshot children : childrenIterator) {
+                        userList.add(children.getValue(User.class));
+                    }
+
+                    searchDonorAdapter.setData(userList);
+                } else {
+                    searchDonorAdapter.setData(userList);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("userlist", databaseError.getMessage());
+                rltProgress.setVisibility(View.GONE);
+            }
+        });
+
+
 
     }
 }

@@ -58,7 +58,7 @@ public class SimpleDialogAdapter extends RecyclerView.Adapter<SimpleDialogAdapte
             txtName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onDialogClickListener.onClick(filterList.get(getAdapterPosition()).getId());
+                    onDialogClickListener.onClick(filterList.get(getAdapterPosition()).getId(), filterList.get(getAdapterPosition()).getTitle());
                 }
             });
         }
