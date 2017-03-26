@@ -6,16 +6,17 @@
               tools:context="co.project.bloodbankmgmt.ui.SearchDonorFragment">
 
 
-    <android.support.v7.widget.AppCompatButton android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/selector_serach_edittext"
-            android:hint="Click here to Search donor"
-            android:textColor="#333333"/>
+    <android.support.v7.widget.AppCompatButton android:id="@+id/btn_select_blood_group"
+                                               android:layout_width="match_parent"
+                                               android:layout_height="50dp"
+                                               android:layout_margin="5dp"
+                                               android:background="@drawable/selector_serach_edittext"
+                                               android:hint="Click here to Search donor"
+                                               android:textColor="#333333"/>
 
     <android.support.v7.widget.RecyclerView android:id="@+id/rv_donor_list"
-                                            android:padding="5dp"
                                             android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"/>
+                                            android:layout_height="wrap_content"
+                                            android:padding="5dp"/>
 
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import co.project.bloodbankmgmt.R;
+import co.project.bloodbankmgmt.models.BloodGroups;
 import co.project.bloodbankmgmt.ui.BloodBankListFragment.OnListFragmentInteractionListener;
 import co.project.bloodbankmgmt.ui.dummy.DummyContent.DummyItem;
 
@@ -19,10 +20,10 @@ import java.util.List;
  */
 public class BloodBankListAdapter extends RecyclerView.Adapter<BloodBankListAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<BloodGroups> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public BloodBankListAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public BloodBankListAdapter(List<BloodGroups> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -36,9 +37,9 @@ public class BloodBankListAdapter extends RecyclerView.Adapter<BloodBankListAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText("AB+");
-        holder.mContentView.setText("Available stocks : 10 bottles");
+        /*holder.mItem = mValues.get(position).;*/
+        holder.mIdView.setText(mValues.get(position).getTitle());
+        holder.mContentView.setText("Available stocks : " + mValues.get(position).getId());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,11 +69,6 @@ public class BloodBankListAdapter extends RecyclerView.Adapter<BloodBankListAdap
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.txt_category);
             mContentView = (TextView) view.findViewById(R.id.txt_service);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
         }
     }
 }
