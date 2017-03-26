@@ -70,7 +70,7 @@ public class BloodBankListFragment extends Fragment {
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
             }
             recyclerView.setAdapter(new BloodBankListAdapter(new ArrayList<BloodGroups>(), mListener));
         }
