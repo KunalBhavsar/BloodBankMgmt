@@ -144,27 +144,6 @@ public class LoginActivity extends AppCompatActivity {
             firebaseUserDB.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    User userSelected = null;
-                    if (dataSnapshot.getChildrenCount() > 0) {
-                        Iterable<DataSnapshot> childrens = dataSnapshot.getChildren();
-                        for (DataSnapshot children : childrens) {
-                            userSelected = children.getValue(User.class);
-                            if (userSelected.getPassword().equals(password)) {
-                                break;
-                            }
-                            else {
-                                userSelected = null;
-                            }
-                        }
-                    }
-
-                    if (userSelected != null) {
-                        Toast.makeText(mAppContext, "User Exist", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        Toast.makeText(mAppContext, "User doesn't exist", Toast.LENGTH_SHORT).show();
-                    }
-                    showProgress(false);
                 }
 
                 @Override
