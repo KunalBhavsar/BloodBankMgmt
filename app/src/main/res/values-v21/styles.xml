@@ -4,14 +4,14 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
 
     <style name="NewAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="android:colorBackground">@color/common_plus_signin_btn_text_dark_default</item>
         <item name="android:colorForeground">@color/cardview_light_background</item>
-        <item name="android:navigationBarColor">?android:attr/navigationBarColor</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
         <item name="android:textColorPrimary">@android:color/secondary_text_dark_nodisable</item>
     </style>
 </resources>
