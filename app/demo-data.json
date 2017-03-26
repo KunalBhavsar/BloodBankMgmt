@@ -44,22 +44,58 @@
         "mobileNumber": "8446468726",
         "address": "11, ABBK, Mahajan Wadi, near Parel Workshop, Parel, Mumbai - 400012",
         "emailAddress": "kunal.vaghmare@gmail.com",
-        "dob": "30/06/1992",
+        "dob": 709842600000,
         "username": "kunalb",
         "password": "kunalb",
-        "profileImageUrl": "http://abbkmahajanwadi.org/kunal.png",
         "bloodGroup": 7,
         "isDonor": true
+      },
+      {
+        "id": 2,
+        "fullname": "Shraddha Pednekar",
+        "gender": "male",
+        "mobileNumber": "9870886669",
+        "address": "11, Something Apartment, Devipada, Boriwali (W)",
+        "emailAddress": "spednekar71@gmail.com",
+        "dob": 712066284797,
+        "password": "spednekar",
+        "username": "spednekar",
+        "bloodGroup": 6,
+        "isDonor": false
       }
     ],
     "bloodBank": [
+      {
+        "bloodGroup": 1,
+        "quantity": 5
+      },
+      {
+        "bloodGroup": 2,
+        "quantity": 3
+      },
+      {
+        "bloodGroup": 3,
+        "quantity": 5
+      },
+      {
+        "bloodGroup": 4,
+        "quantity": 5
+      },
+      {
+        "bloodGroup": 5,
+        "quantity": 5
+      },
+      {
+        "bloodGroup": 6,
+        "quantity": 5
+      },
       {
         "bloodGroup": 7,
         "quantity": 5
       },
       {
-        "bloodGroup": 4,
-        "quantity": 3
+        "bloodGroup": 8,
+        "quantity": 5
       }
     ],
     "bloodRequests": [

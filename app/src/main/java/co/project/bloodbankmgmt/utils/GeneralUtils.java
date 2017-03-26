@@ -8,7 +8,6 @@ import java.util.List;
 
 import co.project.bloodbankmgmt.adapter.BloodGroupAdapter;
 import co.project.bloodbankmgmt.models.BloodGroup;
-import co.project.bloodbankmgmt.ui.RegisterActivity;
 
 /**
  * Created by Kunal on 26/03/17.

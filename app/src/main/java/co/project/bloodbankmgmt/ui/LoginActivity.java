@@ -26,12 +26,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.Map;
 
 import co.project.bloodbankmgmt.R;
 import co.project.bloodbankmgmt.models.User;
+import co.project.bloodbankmgmt.utils.SharedPrefUtils;
 
 /**
  * A login screen that offers login via username/password.
@@ -56,6 +58,12 @@ public class LoginActivity extends AppCompatActivity {
 
         mAppContext = getApplicationContext();
         mActivityContext = this;
+
+        if (SharedPrefUtils.getInstance().get(SharedPrefUtils.IS_LOGGED_IN, false)) {
+            Intent intent = new Intent(LoginActivity.this, HomeScreenActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         // Set up the login form.
         edtUsername = (EditText) findViewById(R.id.edt_username);
@@ -177,9 +185,11 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     if (userSelected != null) {
+                        SharedPrefUtils.getInstance().add(SharedPrefUtils.CURRENT_USER, new Gson().toJson(userSelected));
+                        SharedPrefUtils.getInstance().add(SharedPrefUtils.IS_LOGGED_IN, true);
                         Intent intent = new Intent(LoginActivity.this, HomeScreenActivity.class);
                         startActivity(intent);
-                        Toast.makeText(mAppContext, "User Exist", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mAppContext, "Welcome " + userSelected.getFullname() + "!!", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                     else {

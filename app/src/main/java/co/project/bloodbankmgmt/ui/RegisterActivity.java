@@ -3,34 +3,21 @@ package co.project.bloodbankmgmt.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.RadioButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,9 +37,7 @@ import co.project.bloodbankmgmt.app.BloodBankApplication;
 import co.project.bloodbankmgmt.models.BloodGroup;
 import co.project.bloodbankmgmt.models.User;
 import co.project.bloodbankmgmt.utils.GeneralUtils;
-
-import static android.R.attr.data;
-import static java.security.AccessController.getContext;
+import co.project.bloodbankmgmt.utils.SharedPrefUtils;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -79,8 +64,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     private Calendar calendarDOB;
 
-    private DatabaseReference mDatabase;
     private BloodGroup bloodGroupSelected;
+
+    private boolean existingUser;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +79,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         mRegisterFormView = findViewById(R.id.register_form);
         mProgressView = findViewById(R.id.register_progress);
-
-        showProgress(true);
 
         edtDonorId = (EditText) findViewById(R.id.edt_donor_id);
         edtFullname = (EditText) findViewById(R.id.edt_fullname);
@@ -109,46 +94,57 @@ public class RegisterActivity extends AppCompatActivity {
         chkIsDonor = (CheckBox) findViewById(R.id.chk_is_donor);
         btnRegister = (Button) findViewById(R.id.btn_register);
 
-        edtDonorId.setText(String.valueOf(((BloodBankApplication)mAppContext).getIdSets().getUserId() + 1));
+        calendarDOB = Calendar.getInstance();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("master").child("bloodGroups").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                List<BloodGroup> bloodGroupList = new ArrayList<BloodGroup>();
-                if (dataSnapshot.getChildrenCount() > 0) {
-                    Iterable<DataSnapshot> childrens = dataSnapshot.getChildren();
-                    for (DataSnapshot children : childrens) {
-                        bloodGroupList.add(children.getValue(BloodGroup.class));
-                    }
-                }
-
-                final Dialog bloodGroupSelctionDialog = GeneralUtils.createBloodGroupSingleSelectDialog(mActivityContext, bloodGroupList, new BloodGroupAdapter.OnBloodGroupSelectedListener() {
-                    @Override
-                    public void onBloodGroupSelected(BloodGroup bloodGroupSelected) {
-                        mActivityContext.bloodGroupSelected = bloodGroupSelected;
-                        edtBloodGroup.setText(bloodGroupSelected.getTitle());
-                    }
-                });
-
-                edtBloodGroup.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        bloodGroupSelctionDialog.show();
-                    }
-                });
-                showProgress(false);
+        existingUser = SharedPrefUtils.getInstance().get(SharedPrefUtils.IS_LOGGED_IN, false);
+        if (existingUser) {
+            user = SharedPrefUtils.getCurrentUser();
+            edtDonorId.setText(user.getId() + "");
+            edtFullname.setText(user.getFullname());
+            if (user.getGender().equalsIgnoreCase("male")) {
+                rdoMale.setChecked(true);
             }
+            else if (user.getGender().equalsIgnoreCase("female")) {
+                rdoFemale.setChecked(true);
+            }
+            edtMobileNumber.setText(user.getMobileNumber());
+            edtPassword.setText(user.getPassword());
+            edtAddress.setText(user.getAddress());
+            edtEmailAddress.setText(user.getEmailAddress());
+            calendarDOB.setTimeInMillis(user.getDob());
+            String myFormat = "MM/dd/yyyy"; //In which you need put here
+            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
+            edtDateOfBirth.setText(sdf.format(calendarDOB.getTime()));
+            edtUsername.setText(user.getFullname());
+            List<BloodGroup> bloodGroups = ((BloodBankApplication)getApplication()).getBloodGroupList();
+            for (BloodGroup bloodGroup : bloodGroups) {
+                if (bloodGroup.getId() == user.getBloodGroup()) {
+                    bloodGroupSelected = bloodGroup;
+                    edtBloodGroup.setText(bloodGroup.getTitle());
+                }
+            }
+            chkIsDonor.setChecked(user.isDonor());
+            btnRegister.setText("Update");
+        }
+        else {
+            edtDonorId.setText(String.valueOf(((BloodBankApplication) mAppContext).getIdSets().getUserId() + 1));
+        }
+        final Dialog bloodGroupSelctionDialog = GeneralUtils.createBloodGroupSingleSelectDialog(mActivityContext
+                , ((BloodBankApplication)getApplication()).getBloodGroupList(), new BloodGroupAdapter.OnBloodGroupSelectedListener() {
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "Error in fetching blood group data : " + databaseError.getMessage());
-
+            public void onBloodGroupSelected(BloodGroup bloodGroupSelected) {
+                mActivityContext.bloodGroupSelected = bloodGroupSelected;
+                edtBloodGroup.setText(bloodGroupSelected.getTitle());
             }
         });
 
-        calendarDOB = Calendar.getInstance();
-
+        edtBloodGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bloodGroupSelctionDialog.show();
+            }
+        });
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -158,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
                 calendarDOB.set(Calendar.MONTH, monthOfYear);
                 calendarDOB.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                String myFormat = "MM/dd/yy"; //In which you need put here
+                String myFormat = "MM/dd/yyyy"; //In which you need put here
                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
                 edtDateOfBirth.setText(sdf.format(calendarDOB.getTime()));
@@ -250,7 +246,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        User user = new User();
+        user = new User();
         user.setId(Integer.parseInt(donorId));
         user.setAddress(address);
         user.setDob(dob);
@@ -263,12 +259,17 @@ public class RegisterActivity extends AppCompatActivity {
         user.setDonor(isDonor);
         user.setBloodGroup(bloodGroupSelected.getId());
 
-        mDatabase.child("variable").child("users").child(user.getId() + "").setValue(user);
-        mDatabase.child("variable").child("idSet").child("userId").setValue(user.getId());
-
-        Intent intent = new Intent();
-        intent.putExtra("username", username);
-        setResult(RESULT_OK, intent);
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        if (existingUser) {
+            mDatabase.child("variable").child("users").child(user.getId() + "").setValue(user);
+        }
+        else {
+            mDatabase.child("variable").child("users").child(user.getId() + "").setValue(user);
+            mDatabase.child("variable").child("idSet").child("userId").setValue(user.getId());
+            Intent intent = new Intent();
+            intent.putExtra("username", username);
+            setResult(RESULT_OK, intent);
+        }
         finish();
     }
 

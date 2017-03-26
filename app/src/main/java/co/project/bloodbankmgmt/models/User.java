@@ -6,12 +6,12 @@ package co.project.bloodbankmgmt.models;
 
 public class User {
     private String address;
-    private long bloodGroup;
+    private int bloodGroup;
     private long dob;
     private String emailAddress;
     private String fullname;
     private String gender;
-    private long id;
+    private int id;
     private boolean isDonor;
     private String mobileNumber;
     private String password;
@@ -29,11 +29,11 @@ public class User {
         this.address = address;
     }
 
-    public long getBloodGroup() {
+    public int getBloodGroup() {
         return bloodGroup;
     }
 
-    public void setBloodGroup(long bloodGroup) {
+    public void setBloodGroup(int bloodGroup) {
         this.bloodGroup = bloodGroup;
     }
 
@@ -69,11 +69,11 @@ public class User {
         this.gender = gender;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

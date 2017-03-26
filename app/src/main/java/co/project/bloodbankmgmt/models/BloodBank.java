@@ -10,7 +10,7 @@ public class BloodBank implements Serializable {
 
     private long quantity;
 
-    private long bloodGroup;
+    private int bloodGroup;
 
     public long getQuantity() {
         return quantity;
@@ -20,11 +20,11 @@ public class BloodBank implements Serializable {
         this.quantity = quantity;
     }
 
-    public long getBloodGroup() {
+    public int getBloodGroup() {
         return bloodGroup;
     }
 
-    public void setBloodGroup(long bloodGroup) {
+    public void setBloodGroup(int bloodGroup) {
         this.bloodGroup = bloodGroup;
     }
 }

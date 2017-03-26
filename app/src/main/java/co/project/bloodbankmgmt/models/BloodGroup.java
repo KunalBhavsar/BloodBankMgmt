@@ -5,17 +5,17 @@ package co.project.bloodbankmgmt.models;
  */
 
 public class BloodGroup {
-    private long id;
+    private int id;
     private String title;
 
     public BloodGroup() {
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

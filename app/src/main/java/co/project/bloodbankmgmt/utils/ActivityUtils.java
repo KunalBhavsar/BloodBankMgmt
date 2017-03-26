@@ -10,7 +10,7 @@ import java.util.List;
 
 import co.project.bloodbankmgmt.R;
 import co.project.bloodbankmgmt.adapter.SimpleDialogAdapter;
-import co.project.bloodbankmgmt.models.BloodGroups;
+import co.project.bloodbankmgmt.models.BloodGroup;
 
 /**
  * Created by Shraddha on 26/3/17.
@@ -18,7 +18,7 @@ import co.project.bloodbankmgmt.models.BloodGroups;
 
 public class ActivityUtils {
 
-    public static void showBloodGroupDialog(Context context, List<BloodGroups> filterList, final OnDialogClickListener intf) {
+    public static void showBloodGroupDialog(Context context, List<BloodGroup> filterList, final OnDialogClickListener intf) {
 
         final Dialog dialog = getCustomDialog(context);
         RecyclerView recyclerView = (RecyclerView) dialog.findViewById(R.id.recycle_list_view);
