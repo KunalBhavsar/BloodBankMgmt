@@ -18,8 +18,7 @@
                       android:layout_alignParentTop="true"
                       android:layout_gravity="center_vertical"
                       android:layout_marginLeft="5dp"
-                      android:layout_marginRight="15dp"
-                      android:background="@drawable/txt_group_bg"
+                      android:layout_marginRight="10dp"
                       android:gravity="center"
                       android:text="AB+"
                       android:textColor="@color/colorPrimaryDark"
@@ -33,18 +32,10 @@
                       android:layout_toRightOf="@+id/txt_category"
                       android:paddingRight="10dp"
                       android:layout_centerVertical="true"
-                      android:text="Available stocks : 10 bottles"
+                      android:text="10 bottles"
                       android:textColor="#333333"
                       android:textSize="16sp"
             />
-
-            <ImageView android:layout_width="wrap_content"
-                       android:layout_centerVertical="true"
-                       android:layout_alignParentRight="true"
-                       android:id="@+id/img_search"
-                       android:layout_marginRight="15dp"
-                       android:src="@drawable/ic_send"
-                       android:layout_height="wrap_content"/>
 
         </RelativeLayout>
 

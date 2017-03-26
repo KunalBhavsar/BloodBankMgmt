@@ -30,8 +30,7 @@ public class BloodBankListAdapter extends RecyclerView.Adapter<BloodBankListAdap
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.rv_item_blood_group, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_item_blood_group, parent, false);
         return new ViewHolder(view);
     }
 
