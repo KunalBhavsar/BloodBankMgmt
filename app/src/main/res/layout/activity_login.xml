@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:focusableInTouchMode="true"
     android:background="@android:color/darker_gray"
     tools:context="co.project.bloodbankmgmt.ui.LoginActivity">
 

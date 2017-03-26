@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -36,7 +37,7 @@ import co.project.bloodbankmgmt.models.User;
  * A login screen that offers login via username/password.
  */
 public class LoginActivity extends AppCompatActivity {
-
+    private static final int REGISTER_ACTIVITY_INTENT = 101;
     private DatabaseReference mDatabase;
 
     // UI references.
@@ -46,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     private View mLoginFormView;
 
     private Context mAppContext;
-    private Context mActivityContext;
+    private LoginActivity mActivityContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mActivityContext, RegisterActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REGISTER_ACTIVITY_INTENT);
             }
         });
 
@@ -93,6 +94,23 @@ public class LoginActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REGISTER_ACTIVITY_INTENT && resultCode == RESULT_OK) {
+            String username = data.getStringExtra("username");
+            edtUsername.setText(username);
+            edtPassword.setFocusableInTouchMode(true);
+            edtPassword.setFocusable(true);
+            edtPassword.requestFocus();
+            AppCompatActivity activity = mActivityContext;
+            Snackbar snackbar = Snackbar.make(activity.getWindow().getDecorView().findViewById(android.R.id.content),
+                    "Successfully register, now enter your password to login.",
+                    Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**

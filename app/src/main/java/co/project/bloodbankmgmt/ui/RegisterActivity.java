@@ -5,10 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,6 +27,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,16 +45,20 @@ import java.util.List;
 import java.util.Locale;
 
 import co.project.bloodbankmgmt.R;
+import co.project.bloodbankmgmt.adapter.BloodGroupAdapter;
+import co.project.bloodbankmgmt.app.BloodBankApplication;
 import co.project.bloodbankmgmt.models.BloodGroup;
 import co.project.bloodbankmgmt.models.User;
+import co.project.bloodbankmgmt.utils.GeneralUtils;
 
 import static android.R.attr.data;
+import static java.security.AccessController.getContext;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private Context mAppContext;
-    private Activity mActivityContext;
+    private RegisterActivity mActivityContext;
 
     private View mProgressView;
     private View mRegisterFormView;
@@ -63,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText edtEmailAddress;
     private EditText edtDateOfBirth;
     private EditText edtUsername;
-    private AutoCompleteTextView txtBloodGroup;
+    private EditText edtBloodGroup;
     private CheckBox chkIsDonor;
     private Button btnRegister;
     private EditText edtPassword;
@@ -71,6 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Calendar calendarDOB;
 
     private DatabaseReference mDatabase;
+    private BloodGroup bloodGroupSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,11 +105,11 @@ public class RegisterActivity extends AppCompatActivity {
         edtEmailAddress = (EditText) findViewById(R.id.edt_email);
         edtDateOfBirth = (EditText) findViewById(R.id.edt_dob);
         edtUsername = (EditText) findViewById(R.id.edt_username);
-        txtBloodGroup = (AutoCompleteTextView) findViewById(R.id.edt_blood_group);
+        edtBloodGroup = (EditText) findViewById(R.id.edt_blood_group);
         chkIsDonor = (CheckBox) findViewById(R.id.chk_is_donor);
         btnRegister = (Button) findViewById(R.id.btn_register);
 
-        edtDonorId.setText("12345");
+        edtDonorId.setText(String.valueOf(((BloodBankApplication)mAppContext).getIdSets().getUserId() + 1));
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("master").child("bloodGroups").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -113,20 +123,18 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }
 
-                BloodGroupArrayAdapter adapter = new BloodGroupArrayAdapter(mActivityContext,
-                        android.R.layout.simple_list_item_1, bloodGroupList);
-                txtBloodGroup.setAdapter(adapter);
-                txtBloodGroup.setThreshold(1);
-
-                txtBloodGroup.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                final Dialog bloodGroupSelctionDialog = GeneralUtils.createBloodGroupSingleSelectDialog(mActivityContext, bloodGroupList, new BloodGroupAdapter.OnBloodGroupSelectedListener() {
                     @Override
-                    public void onFocusChange(View view, boolean b) {
-                        if (b) {
-                            ((AutoCompleteTextView)view).showDropDown();
-                        }
-                        else {
-                            ((AutoCompleteTextView)view).dismissDropDown();
-                        }
+                    public void onBloodGroupSelected(BloodGroup bloodGroupSelected) {
+                        mActivityContext.bloodGroupSelected = bloodGroupSelected;
+                        edtBloodGroup.setText(bloodGroupSelected.getTitle());
+                    }
+                });
+
+                edtBloodGroup.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        bloodGroupSelctionDialog.show();
                     }
                 });
                 showProgress(false);
@@ -186,8 +194,64 @@ public class RegisterActivity extends AppCompatActivity {
         String address = edtAddress.getText().toString();
         String password = edtPassword.getText().toString();
 
-        //TODO: add blood group
+        boolean validData = true;
+
+        if (TextUtils.isEmpty(fullname)) {
+            validData = false;
+            edtFullname.setError("This field is required");
+        }
+        else {
+            edtFullname.setError(null);
+        }
+        if (TextUtils.isEmpty(mobileNumber)) {
+            validData = false;
+            edtMobileNumber.setError("This field is required");
+        }
+        else {
+            edtMobileNumber.setError(null);
+        }
+        if (TextUtils.isEmpty(email)) {
+            validData = false;
+            edtEmailAddress.setError("This field is required");
+        }
+        else {
+            edtEmailAddress.setError(null);
+        }
+        if (TextUtils.isEmpty(username)) {
+            validData = false;
+            edtUsername.setError("This field is required");
+        }
+        else {
+            edtUsername.setError(null);
+        }
+        if (TextUtils.isEmpty(password)) {
+            validData = false;
+            edtPassword.setError("This field is required");
+        }
+        else {
+            edtPassword.setError(null);
+        }
+        if (TextUtils.isEmpty(address)) {
+            validData = false;
+            edtAddress.setError("This field is required");
+        }
+        else {
+            edtAddress.setError(null);
+        }
+
+        if (bloodGroupSelected == null) {
+            validData = false;
+            edtBloodGroup.setError("This field is required");
+        }
+        else {
+            edtBloodGroup.setError(null);
+        }
+        if (!validData) {
+            return;
+        }
+
         User user = new User();
+        user.setId(Integer.parseInt(donorId));
         user.setAddress(address);
         user.setDob(dob);
         user.setFullname(fullname);
@@ -197,9 +261,14 @@ public class RegisterActivity extends AppCompatActivity {
         user.setUsername(username);
         user.setPassword(password);
         user.setDonor(isDonor);
-        user.setDonorId(Integer.parseInt(donorId));
+        user.setBloodGroup(bloodGroupSelected.getId());
 
-        mDatabase.child("variable").child("users").setValue(user);
+        mDatabase.child("variable").child("users").child(user.getId() + "").setValue(user);
+        mDatabase.child("variable").child("idSet").child("userId").setValue(user.getId());
+
+        Intent intent = new Intent();
+        intent.putExtra("username", username);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -236,45 +305,6 @@ public class RegisterActivity extends AppCompatActivity {
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
-    class BloodGroupArrayAdapter extends ArrayAdapter<BloodGroup> {
-        Context context;
-        int layoutResourceId;
-        List<BloodGroup> data = null;
-
-        public BloodGroupArrayAdapter(Context context, int resource, List<BloodGroup> data) {
-            super(context, resource, data);
-            this.layoutResourceId = resource;
-            this.context = context;
-            this.data = data;
-        }
-
-        @Override
-        public int getCount() {
-            return data.size();
-        }
-
-        @Nullable
-        @Override
-        public BloodGroup getItem(int position) {
-            return data.get(position);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View row = convertView;
-
-            if(row == null) {
-                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                row = inflater.inflate(layoutResourceId, null);
-            }
-
-            TextView txtBloodGroup = (TextView)row.findViewById(android.R.id.text1);
-
-            txtBloodGroup.setText(data.get(position).getTitle());
-            return row;
         }
     }
 }

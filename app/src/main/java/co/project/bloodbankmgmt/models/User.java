@@ -5,7 +5,6 @@ package co.project.bloodbankmgmt.models;
  */
 
 public class User {
-    private int donorId;
     private String address;
     private long bloodGroup;
     private long dob;
@@ -20,14 +19,6 @@ public class User {
     private String username;
 
     public User() {
-    }
-
-    public int getDonorId() {
-        return donorId;
-    }
-
-    public void setDonorId(int donorId) {
-        this.donorId = donorId;
     }
 
     public String getAddress() {
