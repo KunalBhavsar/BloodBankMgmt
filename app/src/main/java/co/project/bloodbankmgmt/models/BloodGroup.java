@@ -1,22 +1,21 @@
 package co.project.bloodbankmgmt.models;
 
-import java.io.Serializable;
-
 /**
- * Created by Shraddha on 26/3/17.
+ * Created by Kunal on 20/03/17.
  */
 
-public class BloodGroups implements Serializable {
-
-    private long id;
-
+public class BloodGroup {
+    private int id;
     private String title;
 
-    public long getId() {
+    public BloodGroup() {
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.project.bloodbankmgmt.R;
-import co.project.bloodbankmgmt.models.BloodGroups;
+import co.project.bloodbankmgmt.models.BloodGroup;
 import co.project.bloodbankmgmt.utils.ActivityUtils;
 
 /**
@@ -19,7 +19,7 @@ import co.project.bloodbankmgmt.utils.ActivityUtils;
 
 public class SimpleDialogAdapter extends RecyclerView.Adapter<SimpleDialogAdapter.DialogHolder> {
 
-    private List<BloodGroups> filterList;
+    private List<BloodGroup> filterList;
     private ActivityUtils.OnDialogClickListener onDialogClickListener;
 
     public SimpleDialogAdapter(ActivityUtils.OnDialogClickListener onDialogClickListener) {
@@ -27,7 +27,7 @@ public class SimpleDialogAdapter extends RecyclerView.Adapter<SimpleDialogAdapte
         this.onDialogClickListener = onDialogClickListener;
     }
 
-    public void setData(List<BloodGroups> filterList) {
+    public void setData(List<BloodGroup> filterList) {
         this.filterList = filterList;
         notifyDataSetChanged();
     }

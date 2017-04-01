@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private View mLoginFormView;
 
     private Context mAppContext;
-    private Context mActivityContext;
+    private LoginActivity mActivityContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +55,12 @@ public class LoginActivity extends AppCompatActivity {
 
         mAppContext = getApplicationContext();
         mActivityContext = this;
+
+        if (SharedPrefUtils.getInstance().get(SharedPrefUtils.IS_LOGGED_IN, false)) {
+            Intent intent = new Intent(LoginActivity.this, HomeScreenActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         // Set up the login form.
         edtUsername = (EditText) findViewById(R.id.edt_username);
@@ -85,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mActivityContext, RegisterActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REGISTER_ACTIVITY_INTENT);
             }
         });
 
@@ -93,6 +99,23 @@ public class LoginActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REGISTER_ACTIVITY_INTENT && resultCode == RESULT_OK) {
+            String username = data.getStringExtra("username");
+            edtUsername.setText(username);
+            edtPassword.setFocusableInTouchMode(true);
+            edtPassword.setFocusable(true);
+            edtPassword.requestFocus();
+            AppCompatActivity activity = mActivityContext;
+            Snackbar snackbar = Snackbar.make(activity.getWindow().getDecorView().findViewById(android.R.id.content),
+                    "Successfully register, now enter your password to login.",
+                    Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -158,17 +181,22 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
 
-                    if (userSelected != null && userSelected.isAdmin()) {
-                        Intent intent = new Intent(LoginActivity.this, AdminHomeScreenActivity.class);
-                        startActivity(intent);
-                        Toast.makeText(mAppContext, "User Exist", Toast.LENGTH_SHORT).show();
-                        finish();
-                    } else if(userSelected != null){
-                        Intent intent = new Intent(LoginActivity.this, HomeScreenActivity.class);
-                        startActivity(intent);
-                        Toast.makeText(mAppContext, "User Exist", Toast.LENGTH_SHORT).show();
-                        finish();
-                    } else {
+                    if (userSelected != null) {
+                        SharedPrefUtils.getInstance().add(SharedPrefUtils.CURRENT_USER, new Gson().toJson(userSelected));
+                        SharedPrefUtils.getInstance().add(SharedPrefUtils.IS_LOGGED_IN, true);
+                        if (userSelected.isAdmin()) {
+                            Intent intent = new Intent(LoginActivity.this, AdminHomeScreenActivity.class);
+                            startActivity(intent);
+                            Toast.makeText(mAppContext, "User Exist", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Intent intent = new Intent(LoginActivity.this, HomeScreenActivity.class);
+                            startActivity(intent);
+                            Toast.makeText(mAppContext, "User Exist", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+                    else {
                         Toast.makeText(mAppContext, "User doesn't exist", Toast.LENGTH_SHORT).show();
                     }
                     showProgress(false);

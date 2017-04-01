@@ -1,66 +1,114 @@
 {
   "master": {
-    "bloodGroups" : [{
-      "id" : 1,
-      "title" : "A +ve"
-    },
+    "bloodGroups": [
       {
-        "id" : 2,
-        "title" : "A -ve"
+        "id": 1,
+        "title": "A +ve"
       },
       {
-        "id" : 3,
-        "title" : "B +ve"
+        "id": 2,
+        "title": "A -ve"
       },
       {
-        "id" : 4,
-        "title" : "B -ve"
+        "id": 3,
+        "title": "B +ve"
       },
       {
-        "id" : 5,
-        "title" : "AB +ve"
+        "id": 4,
+        "title": "B -ve"
       },
       {
-        "id" : 6,
-        "title" : "AB -ve"
+        "id": 5,
+        "title": "AB +ve"
       },
       {
-        "id" : 7,
-        "title" : "O +ve"
+        "id": 6,
+        "title": "AB -ve"
       },
       {
-        "id" : 8,
-        "title" : "O -ve"
-      }]
+        "id": 7,
+        "title": "O +ve"
+      },
+      {
+        "id": 8,
+        "title": "O -ve"
+      }
+    ]
   },
-  "variable" : {
-    "users" : [{
-      "id" : 1,
-      "fullname" : "Kunal Bhavsar",
-      "gender": "male",
-      "mobileNumber" : "8446468726",
-      "address" : "11, ABBK, Mahajan Wadi, near Parel Workshop, Parel, Mumbai - 400012",
-      "emailAddress" : "kunal.vaghmare@gmail.com",
-      "dob" : "30/06/1992",
-      "username" : "kunalb",
-      "password" : "kunalb",
-      "profileImageUrl" : "http://abbkmahajanwadi.org/kunal.png",
-      "bloodGroup" : 7,
-      "isDonor" : true
-    }],
-    "bloodBank" : [{
-      "bloodGroup" : 7,
-      "quantity" : 5
-    },
+  "variable": {
+    "users": [
       {
-        "bloodGroup" : 4,
-        "quantity" : 3
-      }],
-    "bloodRequests" : [{
-      "userId" : 1,
-      "quantity": 2,
-      "status" : "Pending",
-      "bloodGroup" : 7
-    }]
+        "id": 1,
+        "fullname": "Kunal Bhavsar",
+        "gender": "male",
+        "mobileNumber": "8446468726",
+        "address": "11, ABBK, Mahajan Wadi, near Parel Workshop, Parel, Mumbai - 400012",
+        "emailAddress": "kunal.vaghmare@gmail.com",
+        "dob": 709842600000,
+        "username": "kunalb",
+        "password": "kunalb",
+        "bloodGroup": 7,
+        "isDonor": true
+      },
+      {
+        "id": 2,
+        "fullname": "Shraddha Pednekar",
+        "gender": "male",
+        "mobileNumber": "9870886669",
+        "address": "11, Something Apartment, Devipada, Boriwali (W)",
+        "emailAddress": "spednekar71@gmail.com",
+        "dob": 712066284797,
+        "password": "spednekar",
+        "username": "spednekar",
+        "bloodGroup": 6,
+        "isDonor": false
+      }
+    ],
+    "bloodBank": [
+      {
+        "bloodGroup": 1,
+        "quantity": 5
+      },
+      {
+        "bloodGroup": 2,
+        "quantity": 3
+      },
+      {
+        "bloodGroup": 3,
+        "quantity": 5
+      },
+      {
+        "bloodGroup": 4,
+        "quantity": 5
+      },
+      {
+        "bloodGroup": 5,
+        "quantity": 5
+      },
+      {
+        "bloodGroup": 6,
+        "quantity": 5
+      },
+      {
+        "bloodGroup": 7,
+        "quantity": 5
+      },
+      {
+        "bloodGroup": 8,
+        "quantity": 5
+      }
+    ],
+    "bloodRequests": [
+      {
+        "userId": 1,
+        "quantity": 2,
+        "status": "Pending",
+        "bloodGroup": 7
+      }
+    ],
+    "idSet" : {
+      "userId": 2,
+      "bloodRequestId": 1
+    }
   }
 }

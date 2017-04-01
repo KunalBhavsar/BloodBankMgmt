@@ -23,11 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.project.bloodbankmgmt.R;
+import co.project.bloodbankmgmt.adapter.BloodGroupAdapter;
 import co.project.bloodbankmgmt.adapter.SearchDonorAdapter;
 import co.project.bloodbankmgmt.app.BloodBankApplication;
-import co.project.bloodbankmgmt.models.BloodGroups;
+import co.project.bloodbankmgmt.models.BloodGroup;
 import co.project.bloodbankmgmt.models.User;
 import co.project.bloodbankmgmt.utils.ActivityUtils;
+import co.project.bloodbankmgmt.utils.GeneralUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,7 +37,8 @@ import co.project.bloodbankmgmt.utils.ActivityUtils;
  * Use the {@link SearchDonorFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchDonorFragment extends Fragment implements ActivityUtils.OnDialogClickListener {
+public class SearchDonorFragment extends Fragment {
+    private static final String TAG = SearchDonorFragment.class.getSimpleName();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -99,44 +102,40 @@ public class SearchDonorFragment extends Fragment implements ActivityUtils.OnDia
             @Override
             public void onClick(View v) {
                 BloodBankApplication bloodBankApplication = (BloodBankApplication) getActivity().getApplicationContext();
-                ActivityUtils.showBloodGroupDialog(getContext(), bloodBankApplication.getBloodGroupList(), SearchDonorFragment.this);
-            }
-        });
-    }
+                GeneralUtils.createBloodGroupSingleSelectDialog(getActivity(), bloodBankApplication.getBloodGroupList(), new BloodGroupAdapter.OnBloodGroupSelectedListener() {
+                    @Override
+                    public void onBloodGroupSelected(BloodGroup bloodGroupSelected) {
+                        btnSelectBloodGroup.setText(bloodGroupSelected.getTitle());
+                        rltProgress.setVisibility(View.VISIBLE);
 
-    @Override
-    public void onClick(long selectionId, String bloodGroup) {
-        btnSelectBloodGroup.setText(bloodGroup);
-        rltProgress.setVisibility(View.VISIBLE);
+                        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+                        Query query = database.child("variable").child("users").orderByChild("bloodGroup").equalTo(bloodGroupSelected.getId());
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                rltProgress.setVisibility(View.GONE);
+                                List<User> userList = new ArrayList<>();
+                                if(dataSnapshot != null && dataSnapshot.getChildrenCount() > 0) {
+                                    Iterable<DataSnapshot> childrenIterator = dataSnapshot.getChildren();
 
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        Query query = database.child("variable").child("users").orderByChild("bloodGroup").equalTo(selectionId);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                rltProgress.setVisibility(View.GONE);
-                List<User> userList = new ArrayList<>();
-                if(dataSnapshot != null && dataSnapshot.getChildrenCount() > 0) {
-                    Iterable<DataSnapshot> childrenIterator = dataSnapshot.getChildren();
+                                    for (DataSnapshot children : childrenIterator) {
+                                        userList.add(children.getValue(User.class));
+                                    }
+                                    searchDonorAdapter.setData(userList);
+                                } else {
+                                    searchDonorAdapter.setData(userList);
+                                }
+                            }
 
-                    for (DataSnapshot children : childrenIterator) {
-                        userList.add(children.getValue(User.class));
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.e(TAG, databaseError.getMessage());
+                                rltProgress.setVisibility(View.GONE);
+                            }
+                        });
                     }
-
-                    searchDonorAdapter.setData(userList);
-                } else {
-                    searchDonorAdapter.setData(userList);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("userlist", databaseError.getMessage());
-                rltProgress.setVisibility(View.GONE);
+                }).show();
             }
         });
-
-
-
     }
 }
