@@ -158,13 +158,17 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
 
-                    if (userSelected != null) {
+                    if (userSelected != null && userSelected.isAdmin()) {
+                        Intent intent = new Intent(LoginActivity.this, AdminHomeScreenActivity.class);
+                        startActivity(intent);
+                        Toast.makeText(mAppContext, "User Exist", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else if(userSelected != null){
                         Intent intent = new Intent(LoginActivity.this, HomeScreenActivity.class);
                         startActivity(intent);
                         Toast.makeText(mAppContext, "User Exist", Toast.LENGTH_SHORT).show();
                         finish();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(mAppContext, "User doesn't exist", Toast.LENGTH_SHORT).show();
                     }
                     showProgress(false);

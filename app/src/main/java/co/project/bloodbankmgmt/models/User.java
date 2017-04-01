@@ -4,7 +4,7 @@ package co.project.bloodbankmgmt.models;
  * Created by Kunal on 19/03/17.
  */
 
-public class User {
+public class User  {
     private String address;
     private long bloodGroup;
     private String dob;
@@ -17,8 +17,17 @@ public class User {
     private String password;
     private String profileImageUrl;
     private String username;
+    private boolean isAdmin;
 
     public User() {
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     public String getAddress() {
