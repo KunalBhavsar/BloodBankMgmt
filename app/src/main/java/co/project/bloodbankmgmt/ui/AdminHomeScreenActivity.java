@@ -1,47 +1,46 @@
 package co.project.bloodbankmgmt.ui;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import co.project.bloodbankmgmt.R;
 
 public class AdminHomeScreenActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
+    private Button btnBloodBank;
+    private RecyclerView recyclerView;
+    private FloatingActionButton fabManualTransations;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
-                    return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
-                    return true;
-            }
-            return false;
-        }
-
-    };
+    private Activity mActivityContext;
+    private Context mAppContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home_screen);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        btnBloodBank = (Button) findViewById(R.id.btn_blood_bank);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_requests);
+        fabManualTransations = (FloatingActionButton) findViewById(R.id.fab_add_manual_transations);
+
+        fabManualTransations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mActivityContext, TransactionActivity.class);
+                mActivityContext.startActivity(intent);
+            }
+        });
     }
 
 }

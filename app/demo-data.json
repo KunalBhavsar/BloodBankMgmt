@@ -101,11 +101,11 @@
       "fullname" : "Kunal Bhavsar",
       "gender" : "male",
       "id" : 0,
-      "isDonor" : true,
+      "donor" : true,
       "mobileNumber" : "8446468726",
       "password" : "kunalb",
       "username" : "kunalb",
-      "isAdmin" : true
+      "admin" : true
     }, {
       "address" : "11, Something Apartment, Devipada, Boriwali (W)",
       "bloodGroup" : 2,
@@ -114,11 +114,11 @@
       "fullname" : "Shraddha Pednekar",
       "gender" : "female",
       "id" : 1,
-      "isDonor" : false,
+      "donor" : false,
       "mobileNumber" : "9870886669",
       "password" : "spednekar",
       "username" : "spednekar",
-      "isAdmin" : false
+      "admin" : false
     }, {
       "address" : "11, Something Apartment, Aurangabad (W)",
       "bloodGroup" : 6,
@@ -131,7 +131,7 @@
       "mobileNumber" : "9870654321",
       "password" : "shraddhac",
       "username" : "Shraddha Chauhan",
-      "isAdmin" : false
+      "admin" : false
     }, {
       "address" : "15, Wanjoli Naka, near Police Staion, Dahisar",
       "bloodGroup" : 7,
@@ -144,7 +144,7 @@
       "mobileNumber" : "8446468726",
       "password" : "harshadad",
       "username" : "Harshada Dholam",
-      "isAdmin" : false
+      "admin" : false
     }, {
       "address" : "Sumangal residency,Aurangabad",
       "bloodGroup" : 4,
@@ -157,7 +157,7 @@
       "mobileNumber" : "9404228999",
       "password" : "shraddha",
       "username" : "Shraddha",
-      "isAdmin" : false
+      "admin" : false
     } ]
   }
 }

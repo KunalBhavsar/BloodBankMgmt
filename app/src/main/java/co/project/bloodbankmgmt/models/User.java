@@ -12,22 +12,30 @@ public class User  {
     private String fullname;
     private String gender;
     private int id;
-    private boolean isDonor;
+    private boolean donor;
     private String mobileNumber;
     private String password;
     private String profileImageUrl;
     private String username;
-    private boolean isAdmin;
+    private boolean admin;
 
     public User() {
     }
 
+    public boolean isDonor() {
+        return donor;
+    }
+
+    public void setDonor(boolean donor) {
+        this.donor = donor;
+    }
+
     public boolean isAdmin() {
-        return isAdmin;
+        return admin;
     }
 
     public void setAdmin(boolean admin) {
-        isAdmin = admin;
+        this.admin = admin;
     }
 
     public String getAddress() {
@@ -84,14 +92,6 @@ public class User  {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public boolean isDonor() {
-        return isDonor;
-    }
-
-    public void setDonor(boolean donor) {
-        isDonor = donor;
     }
 
     public String getMobileNumber() {
