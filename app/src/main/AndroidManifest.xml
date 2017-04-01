@@ -31,11 +31,15 @@
             android:name=".ui.HomeScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NewAppTheme">
-
         </activity>
         <activity
             android:name=".ui.AdminHomeScreenActivity"
             android:label="@string/title_activity_admin_home_screen">
+        </activity>
+        <activity
+            android:name=".ui.TransactionActivity"
+            android:label="@string/title_activity_transaction"
+            android:theme="@style/NewAppTheme">
         </activity>
     </application>
 
