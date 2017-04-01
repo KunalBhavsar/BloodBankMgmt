@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -25,18 +26,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.Map;
 
 import co.project.bloodbankmgmt.R;
 import co.project.bloodbankmgmt.models.User;
+import co.project.bloodbankmgmt.utils.SharedPrefUtils;
 
 /**
  * A login screen that offers login via username/password.
  */
 public class LoginActivity extends AppCompatActivity {
 
+    private static final int REGISTER_ACTIVITY_INTENT = 1;
     private DatabaseReference mDatabase;
 
     // UI references.

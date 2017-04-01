@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -262,6 +263,7 @@ public class RegisterActivity extends AppCompatActivity {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         if (existingUser) {
             mDatabase.child("variable").child("users").child(user.getId() + "").setValue(user);
+            SharedPrefUtils.getInstance().add(SharedPrefUtils.CURRENT_USER, new Gson().toJson(user));
         }
         else {
             mDatabase.child("variable").child("users").child(user.getId() + "").setValue(user);

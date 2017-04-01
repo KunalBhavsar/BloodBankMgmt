@@ -1,114 +1,163 @@
 {
-  "master": {
-    "bloodGroups": [
-      {
-        "id": 1,
-        "title": "A +ve"
-      },
-      {
-        "id": 2,
-        "title": "A -ve"
-      },
-      {
-        "id": 3,
-        "title": "B +ve"
-      },
-      {
-        "id": 4,
-        "title": "B -ve"
-      },
-      {
-        "id": 5,
-        "title": "AB +ve"
-      },
-      {
-        "id": 6,
-        "title": "AB -ve"
-      },
-      {
-        "id": 7,
-        "title": "O +ve"
-      },
-      {
-        "id": 8,
-        "title": "O -ve"
-      }
-    ]
+  "master" : {
+    "bloodGroups" : [ {
+      "id" : 1,
+      "title" : "A +ve"
+    }, {
+      "id" : 2,
+      "title" : "A -ve"
+    }, {
+      "id" : 3,
+      "title" : "B +ve"
+    }, {
+      "id" : 4,
+      "title" : "B -ve"
+    }, {
+      "id" : 5,
+      "title" : "AB +ve"
+    }, {
+      "id" : 6,
+      "title" : "AB -ve"
+    }, {
+      "id" : 7,
+      "title" : "O +ve"
+    }, {
+      "id" : 8,
+      "title" : "O -ve"
+    } ]
   },
-  "variable": {
-    "users": [
-      {
-        "id": 1,
-        "fullname": "Kunal Bhavsar",
-        "gender": "male",
-        "mobileNumber": "8446468726",
-        "address": "11, ABBK, Mahajan Wadi, near Parel Workshop, Parel, Mumbai - 400012",
-        "emailAddress": "kunal.vaghmare@gmail.com",
-        "dob": 709842600000,
-        "username": "kunalb",
-        "password": "kunalb",
-        "bloodGroup": 7,
-        "isDonor": true
-      },
-      {
-        "id": 2,
-        "fullname": "Shraddha Pednekar",
-        "gender": "male",
-        "mobileNumber": "9870886669",
-        "address": "11, Something Apartment, Devipada, Boriwali (W)",
-        "emailAddress": "spednekar71@gmail.com",
-        "dob": 712066284797,
-        "password": "spednekar",
-        "username": "spednekar",
-        "bloodGroup": 6,
-        "isDonor": false
-      }
-    ],
-    "bloodBank": [
-      {
-        "bloodGroup": 1,
-        "quantity": 5
-      },
-      {
-        "bloodGroup": 2,
-        "quantity": 3
-      },
-      {
-        "bloodGroup": 3,
-        "quantity": 5
-      },
-      {
-        "bloodGroup": 4,
-        "quantity": 5
-      },
-      {
-        "bloodGroup": 5,
-        "quantity": 5
-      },
-      {
-        "bloodGroup": 6,
-        "quantity": 5
-      },
-      {
-        "bloodGroup": 7,
-        "quantity": 5
-      },
-      {
-        "bloodGroup": 8,
-        "quantity": 5
-      }
-    ],
-    "bloodRequests": [
-      {
-        "userId": 1,
-        "quantity": 2,
-        "status": "Pending",
-        "bloodGroup": 7
-      }
-    ],
+  "variable" : {
+    "bloodBank" : [ {
+      "bloodGroup" : 1,
+      "quantity" : 5
+    }, {
+      "bloodGroup" : 2,
+      "quantity" : 3
+    }, {
+      "bloodGroup" : 3,
+      "quantity" : 5
+    }, {
+      "bloodGroup" : 4,
+      "quantity" : 5
+    }, {
+      "bloodGroup" : 5,
+      "quantity" : 5
+    }, {
+      "bloodGroup" : 6,
+      "quantity" : 5
+    }, {
+      "bloodGroup" : 7,
+      "quantity" : 5
+    }, {
+      "bloodGroup" : 8,
+      "quantity" : 5
+    } ],
+    "bloodRequests" : [ {
+      "bloodGroup" : 7,
+      "id" : 1,
+      "quantity" : 2,
+      "status" : "Pending",
+      "userId" : 1
+    }, null, {
+      "bloodGroup" : 7,
+      "id" : 2,
+      "quantity" : 1,
+      "status" : "PENDING",
+      "userId" : 3
+    }, {
+      "bloodGroup" : 2,
+      "id" : 3,
+      "quantity" : 2,
+      "status" : "PENDING",
+      "userId" : 0
+    }, {
+      "bloodGroup" : 7,
+      "id" : 4,
+      "quantity" : 1,
+      "status" : "PENDING",
+      "userId" : 4
+    }, {
+      "bloodGroup" : 2,
+      "id" : 5,
+      "quantity" : 2,
+      "status" : "PENDING",
+      "userId" : 4
+    }, {
+      "bloodGroup" : 3,
+      "id" : 6,
+      "quantity" : 3,
+      "status" : "PENDING",
+      "userId" : 4
+    } ],
     "idSet" : {
-      "userId": 2,
-      "bloodRequestId": 1
-    }
+      "bloodRequestId" : 6,
+      "userId" : 4
+    },
+    "users" : [ {
+      "address" : "11, ABBK, Mahajan Wadi, near Parel Workshop, Parel, Mumbai - 400012",
+      "bloodGroup" : 7,
+      "dob" : 709842600000,
+      "emailAddress" : "kunal.vaghmare@gmail.com",
+      "fullname" : "Kunal Bhavsar",
+      "gender" : "male",
+      "id" : 0,
+      "isDonor" : true,
+      "mobileNumber" : "8446468726",
+      "password" : "kunalb",
+      "username" : "kunalb",
+      "isAdmin" : true
+    }, {
+      "address" : "11, Something Apartment, Devipada, Boriwali (W)",
+      "bloodGroup" : 2,
+      "dob" : 712066284797,
+      "emailAddress" : "spednekar71@gmail.com",
+      "fullname" : "Shraddha Pednekar",
+      "gender" : "female",
+      "id" : 1,
+      "isDonor" : false,
+      "mobileNumber" : "9870886669",
+      "password" : "spednekar",
+      "username" : "spednekar",
+      "isAdmin" : false
+    }, {
+      "address" : "11, Something Apartment, Aurangabad (W)",
+      "bloodGroup" : 6,
+      "dob" : 712066294797,
+      "donor" : true,
+      "emailAddress" : "schauhan@gmail.com",
+      "fullname" : "Shraddha Chauhan",
+      "gender" : "male",
+      "id" : 2,
+      "mobileNumber" : "9870654321",
+      "password" : "shraddhac",
+      "username" : "Shraddha Chauhan",
+      "isAdmin" : false
+    }, {
+      "address" : "15, Wanjoli Naka, near Police Staion, Dahisar",
+      "bloodGroup" : 7,
+      "dob" : 733181103592,
+      "donor" : true,
+      "emailAddress" : "harshda@gmail.com",
+      "fullname" : "Harshada Dholam",
+      "gender" : "female",
+      "id" : 3,
+      "mobileNumber" : "8446468726",
+      "password" : "harshadad",
+      "username" : "Harshada Dholam",
+      "isAdmin" : false
+    }, {
+      "address" : "Sumangal residency,Aurangabad",
+      "bloodGroup" : 4,
+      "dob" : 709632669601,
+      "donor" : true,
+      "emailAddress" : "shraddhachauhaan@gmail.com",
+      "fullname" : "Shraddha Chetansinh Chauhan",
+      "gender" : "female",
+      "id" : 4,
+      "mobileNumber" : "9404228999",
+      "password" : "shraddha",
+      "username" : "Shraddha",
+      "isAdmin" : false
+    } ]
   }
 }
