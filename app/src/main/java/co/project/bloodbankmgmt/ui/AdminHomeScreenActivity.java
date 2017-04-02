@@ -82,7 +82,7 @@ public class AdminHomeScreenActivity extends AppCompatActivity implements AppDat
         recyclerView.setAdapter(bloodRequestAdapter);
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("master").child("bloodRequests").addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("variable").child("bloodRequests").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<BloodBankRequest> bloodBankRequests = new ArrayList<>();
