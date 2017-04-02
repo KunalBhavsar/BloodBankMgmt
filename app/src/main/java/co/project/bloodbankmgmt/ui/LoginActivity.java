@@ -61,9 +61,16 @@ public class LoginActivity extends AppCompatActivity {
         mActivityContext = this;
 
         if (SharedPrefUtils.getInstance().get(SharedPrefUtils.IS_LOGGED_IN, false)) {
-            Intent intent = new Intent(LoginActivity.this, HomeScreenActivity.class);
-            startActivity(intent);
-            finish();
+            if (SharedPrefUtils.getInstance().get(SharedPrefUtils.IS_ADMIN, false)) {
+                Intent intent = new Intent(LoginActivity.this, AdminHomeScreenActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            else {
+                Intent intent = new Intent(LoginActivity.this, HomeScreenActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
 
         // Set up the login form.
@@ -188,6 +195,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (userSelected != null) {
                         SharedPrefUtils.getInstance().add(SharedPrefUtils.CURRENT_USER, new Gson().toJson(userSelected));
                         SharedPrefUtils.getInstance().add(SharedPrefUtils.IS_LOGGED_IN, true);
+                        SharedPrefUtils.getInstance().add(SharedPrefUtils.IS_ADMIN, userSelected.isAdmin());
                         if (userSelected.isAdmin()) {
                             Intent intent = new Intent(LoginActivity.this, AdminHomeScreenActivity.class);
                             startActivity(intent);

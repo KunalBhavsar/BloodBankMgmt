@@ -23,6 +23,8 @@ public class SharedPrefUtils {
     private static final String SHARED_PREFS_FILE_NAME = "paycillin_spref";
     public static final String CURRENT_USER = "current_user";
     public static final String IS_LOGGED_IN = "logged_in";
+    public static final String IS_ADMIN = "admin";
+
     private SharedPreferences sharedPrefs;
     private SharedPreferences.Editor editor;
 

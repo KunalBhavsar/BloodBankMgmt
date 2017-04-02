@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp">
+            <TextView
+                android:id="@+id/txt_user_name"
+                android:text="Requester : "
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_toEndOf="@+id/txt_user_name"
+                android:layout_toRightOf="@+id/txt_user_name"
+                android:id="@+id/txt_user_name_value"
+                android:text="Kunal Bhavsar"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:padding="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp">
+            <TextView
+                android:id="@+id/txt_quantity"
+                android:text="Quantity : "
+                android:textSize="14sp"
+                android:textAllCaps="true"
+                android:layout_centerVertical="true"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_toEndOf="@+id/txt_quantity"
+                android:layout_toRightOf="@+id/txt_quantity"
+                android:id="@+id/txt_quantity_value"
+                android:text="5"
+                android:textSize="16sp"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp">
+            <TextView
+                android:id="@+id/txt_blood_group"
+                android:text="Blood Group : "
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_toEndOf="@+id/txt_blood_group"
+                android:layout_toRightOf="@+id/txt_blood_group"
+                android:id="@+id/txt_blood_group_value"
+                android:layout_centerVertical="true"
+                android:text="O +ve"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <TextView
+            android:padding="5dp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/txt_status"
+            android:text="Pending"
+            android:textSize="14sp"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/rel_buttons"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <Button
+            android:id="@+id/btn_accept"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:text="ACCEPT"
+            android:background="@color/gray_999999"
+            android:textColor="@android:color/white"
+            android:layout_height="match_parent" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"/>
+        <Button
+            android:id="@+id/btn_reject"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:text="REJECT"
+            android:background="@color/gray_999999"
+            android:textColor="@android:color/white"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</LinearLayout>
