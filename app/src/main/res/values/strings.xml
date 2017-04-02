@@ -1,3 +1,4 @@
+
 <resources>
     <string name="app_name">Blood Bank Management</string>
 
@@ -43,5 +44,6 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="title_activity_transaction">TransactionActivity</string>
+    <string name="title_activity_transaction">Blood Transaction</string>
+    <string name="save">Save</string>
 </resources>

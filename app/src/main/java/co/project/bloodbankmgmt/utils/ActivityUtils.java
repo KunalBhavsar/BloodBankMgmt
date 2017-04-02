@@ -1,5 +1,6 @@
 package co.project.bloodbankmgmt.utils;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 
@@ -22,6 +24,13 @@ import co.project.bloodbankmgmt.models.BloodGroup;
  */
 
 public class ActivityUtils {
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (activity.getWindow().getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(activity.getWindow().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
 
     public static void datePickerDialog(Context context, DateTimeInterface dateTimeInterface, long minDate) {
         final DateTimeInterface dateInterface = dateTimeInterface;

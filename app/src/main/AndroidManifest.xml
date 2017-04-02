@@ -41,6 +41,7 @@
             android:name=".ui.TransactionActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_transaction"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@style/NewAppTheme">
         </activity>
     </application>
