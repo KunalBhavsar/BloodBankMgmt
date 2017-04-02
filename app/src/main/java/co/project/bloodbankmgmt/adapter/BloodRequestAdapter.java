@@ -1,11 +1,13 @@
 package co.project.bloodbankmgmt.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -75,6 +77,7 @@ public class BloodRequestAdapter extends RecyclerView.Adapter<BloodRequestAdapte
         TextView txtQuantity;
         TextView txtBloodGroup;
         TextView txtStatus;
+        LinearLayout lnrButtons;
         Button btnAccept;
         Button btnReject;
         public ViewHolder(View itemView) {
@@ -85,6 +88,7 @@ public class BloodRequestAdapter extends RecyclerView.Adapter<BloodRequestAdapte
             txtStatus = (TextView) itemView.findViewById(R.id.txt_status);
             btnAccept = (Button) itemView.findViewById(R.id.btn_accept);
             btnReject = (Button) itemView.findViewById(R.id.btn_reject);
+            lnrButtons = (LinearLayout) itemView.findViewById(R.id.lnr_buttons);
         }
 
         public void bind(final BloodBankRequest bloodBankRequest, final OnChildClickListener onChildClickListener) {
@@ -100,21 +104,33 @@ public class BloodRequestAdapter extends RecyclerView.Adapter<BloodRequestAdapte
                     break;
                 }
             }
-            txtQuantity.setText(String.valueOf(bloodBankRequest.getUserId()));
+            txtQuantity.setText(String.valueOf(bloodBankRequest.getQuantity()));
             txtStatus.setText(bloodBankRequest.getStatus());
-            btnAccept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onChildClickListener.onAcceptButtonClicked(bloodBankRequest);
+            if (bloodBankRequest.getStatus().equalsIgnoreCase("PENDING")) {
+                lnrButtons.setVisibility(View.VISIBLE);
+                btnAccept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onChildClickListener.onAcceptButtonClicked(bloodBankRequest);
+                    }
+                });
+                btnReject.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onChildClickListener.onRejectButtonClicked(bloodBankRequest);
+                    }
+                });
+                txtStatus.setTextColor(Color.YELLOW);
+            }
+            else {
+                lnrButtons.setVisibility(View.GONE);
+                if (bloodBankRequest.getStatus().equalsIgnoreCase("ACCEPTED")) {
+                    txtStatus.setTextColor(Color.GREEN);
                 }
-            });
-            btnReject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onChildClickListener.onRejectButtonClicked(bloodBankRequest);
+                else if (bloodBankRequest.getStatus().equalsIgnoreCase("REJECTED")) {
+                    txtStatus.setTextColor(Color.RED);
                 }
-            });
-
+            }
         }
     }
 

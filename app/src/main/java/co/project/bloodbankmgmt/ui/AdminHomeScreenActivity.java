@@ -1,11 +1,13 @@
 package co.project.bloodbankmgmt.ui;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +32,7 @@ import co.project.bloodbankmgmt.Interfaces.AppDataChangeListener;
 import co.project.bloodbankmgmt.R;
 import co.project.bloodbankmgmt.adapter.BloodRequestAdapter;
 import co.project.bloodbankmgmt.app.BloodBankApplication;
+import co.project.bloodbankmgmt.models.BloodBank;
 import co.project.bloodbankmgmt.models.BloodBankRequest;
 import co.project.bloodbankmgmt.models.BloodGroup;
 import co.project.bloodbankmgmt.models.IdSets;
@@ -46,6 +50,11 @@ public class AdminHomeScreenActivity extends AppCompatActivity implements AppDat
     private Activity mActivityContext;
     private Context mAppContext;
 
+    private ProgressDialog progressDialog;
+    private List<BloodBank> bloodBankList;
+
+    private BottomSheetBehavior mBottomSheetBehavior1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +63,32 @@ public class AdminHomeScreenActivity extends AppCompatActivity implements AppDat
         mActivityContext = this;
         mAppContext = getApplicationContext();
 
+        progressDialog = new ProgressDialog(mActivityContext);
+        progressDialog.setMessage("Please wait..");
+        progressDialog.show();
+
+        bloodBankList = new ArrayList<>();
+
         btnBloodBank = (Button) findViewById(R.id.btn_blood_bank);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_requests);
         fabManualTransations = (FloatingActionButton) findViewById(R.id.fab_add_manual_transations);
+
+        View bottomSheet = findViewById(R.id.bottom_sheet1);
+        mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
+
+        btnBloodBank.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    // mButton1.setText(R.string.collapse_button1);
+                }
+                else {
+                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    // mButton1.setText(R.string.button1);
+                }
+            }
+        });
 
         fabManualTransations.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,12 +101,12 @@ public class AdminHomeScreenActivity extends AppCompatActivity implements AppDat
         bloodRequestAdapter = new BloodRequestAdapter(mAppContext, new ArrayList<BloodBankRequest>(), new BloodRequestAdapter.OnChildClickListener() {
             @Override
             public void onAcceptButtonClicked(BloodBankRequest bloodBankRequest) {
-
+                updateStatusOfBloodRequest(bloodBankRequest, true);
             }
 
             @Override
             public void onRejectButtonClicked(BloodBankRequest bloodBankRequest) {
-
+                updateStatusOfBloodRequest(bloodBankRequest, false);
             }
         });
 
@@ -92,6 +124,28 @@ public class AdminHomeScreenActivity extends AppCompatActivity implements AppDat
                         bloodBankRequests.add(children.getValue(BloodBankRequest.class));
                     }
                     bloodRequestAdapter.updateDataSource(bloodBankRequests);
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, databaseError.getMessage());
+                progressDialog.dismiss();
+            }
+        });
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("variable").child("bloodBank").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<BloodBank> bloodBanks = new ArrayList<>();
+                if(dataSnapshot.getChildrenCount() > 0) {
+                    Iterable<DataSnapshot> childrenIterator = dataSnapshot.getChildren();
+                    for (DataSnapshot children : childrenIterator) {
+                        bloodBanks.add(children.getValue(BloodBank.class));
+                    }
+                    bloodBankList = bloodBanks;
                 }
             }
 
@@ -129,5 +183,35 @@ public class AdminHomeScreenActivity extends AppCompatActivity implements AppDat
     @Override
     public void onIdSetDataUpdated(IdSets idSets) {
 
+    }
+
+    private void updateStatusOfBloodRequest(BloodBankRequest bloodBankRequest, boolean accept) {
+        progressDialog.show();
+        if (accept) {
+            for (BloodBank bloodBank : bloodBankList) {
+                if (bloodBank.getBloodGroup() == bloodBankRequest.getBloodGroup()) {
+                    if (bloodBank.getQuantity() < bloodBankRequest.getQuantity()) {
+                        Toast.makeText(mActivityContext, "Not enough stock available for request", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        bloodBank.setQuantity(bloodBank.getQuantity() - bloodBankRequest.getQuantity());
+                        FirebaseDatabase.getInstance().getReference().child("variable").child("bloodBank").setValue(bloodBankList);
+
+                        bloodBankRequest.setStatus("ACCEPTED");
+                        FirebaseDatabase.getInstance().getReference().child("variable").child("bloodRequests")
+                                .child(bloodBankRequest.getId() + "").setValue(bloodBankRequest);
+                        Toast.makeText(mActivityContext, "Request Accepted", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }
+        else {
+            bloodBankRequest.setStatus("REJECTED");
+            FirebaseDatabase.getInstance().getReference().child("variable").child("bloodRequests")
+                    .child(bloodBankRequest.getId() + "").setValue(bloodBankRequest);
+            Toast.makeText(mActivityContext, "Request Rejected", Toast.LENGTH_SHORT).show();
+        }
+        bloodRequestAdapter.notifyDataSetChanged();
+        progressDialog.dismiss();
     }
 }
