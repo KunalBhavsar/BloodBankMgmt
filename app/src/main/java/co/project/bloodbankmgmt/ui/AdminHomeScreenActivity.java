@@ -53,8 +53,6 @@ public class AdminHomeScreenActivity extends AppCompatActivity implements AppDat
     private ProgressDialog progressDialog;
     private List<BloodBank> bloodBankList;
 
-    private BottomSheetBehavior mBottomSheetBehavior1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,20 +71,11 @@ public class AdminHomeScreenActivity extends AppCompatActivity implements AppDat
         recyclerView = (RecyclerView) findViewById(R.id.recycler_requests);
         fabManualTransations = (FloatingActionButton) findViewById(R.id.fab_add_manual_transations);
 
-        View bottomSheet = findViewById(R.id.bottom_sheet1);
-        mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
-
         btnBloodBank.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
-                    // mButton1.setText(R.string.collapse_button1);
-                }
-                else {
-                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    // mButton1.setText(R.string.button1);
-                }
+                BloodBankBottomSheetDrawer sharePaymentOptionsDialog = new BloodBankBottomSheetDrawer();
+                sharePaymentOptionsDialog.show((((AppCompatActivity)mActivityContext).getSupportFragmentManager()), TAG);
             }
         });
 
