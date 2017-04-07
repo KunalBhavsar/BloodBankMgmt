@@ -1,22 +1,20 @@
 package co.project.bloodbankmgmt.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -37,11 +35,13 @@ import co.project.bloodbankmgmt.models.BloodBankRequest;
 import co.project.bloodbankmgmt.models.BloodGroup;
 import co.project.bloodbankmgmt.models.IdSets;
 import co.project.bloodbankmgmt.models.User;
+import co.project.bloodbankmgmt.utils.SharedPrefUtils;
 
 public class AdminHomeScreenActivity extends AppCompatActivity implements AppDataChangeListener {
 
     private static final String TAG = AdminHomeScreenActivity.class.getSimpleName();
     private Button btnBloodBank;
+    private ImageView btnLogout;
     private RecyclerView recyclerView;
     private FloatingActionButton fabManualTransations;
 
@@ -68,8 +68,30 @@ public class AdminHomeScreenActivity extends AppCompatActivity implements AppDat
         bloodBankList = new ArrayList<>();
 
         btnBloodBank = (Button) findViewById(R.id.btn_blood_bank);
+        btnLogout = (ImageView) findViewById(R.id.btn_logout);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_requests);
         fabManualTransations = (FloatingActionButton) findViewById(R.id.fab_add_manual_transations);
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(mActivityContext).setMessage("Are you sure you want to logout??").setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SharedPrefUtils.getInstance().resetSharedPrefsValue();
+                        Intent intent = new Intent(mActivityContext, LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        mActivityContext.finish();
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).create().show();
+            }
+        });
 
         btnBloodBank.setOnClickListener(new View.OnClickListener() {
             @Override

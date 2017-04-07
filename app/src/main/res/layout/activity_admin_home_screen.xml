@@ -17,9 +17,18 @@
             android:id="@+id/btn_blood_bank"
             android:text="Blood Bank"
             android:textSize="16sp"
+            android:layout_toLeftOf="@+id/btn_logout"
             android:background="@color/colorPrimary"
             android:textColor="@android:color/white"
             android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+        <ImageView
+            android:id="@+id/btn_logout"
+            android:padding="5dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_logout"
+            android:layout_width="50dp"
             android:layout_height="50dp" />
 
         <android.support.v7.widget.RecyclerView

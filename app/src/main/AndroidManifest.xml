@@ -44,6 +44,14 @@
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@style/NewAppTheme">
         </activity>
+        <activity
+            android:name=".ui.CreateBloodRequestActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/NewAppTheme">
+        </activity>
+
     </application>
 
 </manifest>
